@@ -26,6 +26,12 @@ function UltrasonicSensor(props) {
   );
 }
 
+function AntennaSignal(props){
+  return (
+    React.createElement('div', null, `Antenna Signal (Decibels): `, props.decibels)
+  );
+}
+
 class MainContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -34,6 +40,7 @@ class MainContainer extends React.Component {
       longitude: 400,
       Amperage: 400,
       distance: 400,
+      decibels: 400,
     };
     setInterval(this.changeState, 1000);
   }
@@ -43,11 +50,13 @@ class MainContainer extends React.Component {
     let lon = 1 - getRandomInt(3);
     let amp = 1 - getRandomInt(3);
     let dis = 1 - getRandomInt(3);
+    let dec = 1 - getRandomInt(3);//dec means decibels
     this.setState({
       latitude: (this.state.latitude + lat),
       longitude: (this.state.longitude + lon),
       Amperage: (this.state.Amperage + amp),
-      distance: (this.state.distance + dis)
+      distance: (this.state.distance + dis),
+      decibels: (this.state.decibels + dec),
     });
   }
 
@@ -56,16 +65,16 @@ class MainContainer extends React.Component {
     const longitude = this.state.longitude;
     const amps = this.state.Amperage;
     const dists = this.state.distance;
+    const decibels = this.state.decibels;
     return (
       React.createElement('div', null, [
         React.createElement(GPS, { latitude, longitude }),
         React.createElement(CurrentDraw, { amps }),
-        React.createElement(UltrasonicSensor, { distance: dists })
+        React.createElement(UltrasonicSensor, { distance: dists }),
+        React.createElement(AntennaSignal, {decibels})
       ])
-
     );
   }
-
 
 }
 
