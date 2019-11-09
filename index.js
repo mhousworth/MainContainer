@@ -15,25 +15,29 @@ class GPS extends React.Component {
 
 class CurrentDraw extends React.Component {
   render() {
-    const CurrentAmp = "Amps: " + this.props.amps;
+    const CurrentAmp = "Amps: " + this.props.amperage;
     return (React.createElement('p', { className: "CurrentDraw" }, CurrentAmp));
   }
 }
 
-function UltrasonicSensor(props) {
-  return (
-    React.createElement('div', null, `Distance (feet): `, props.distance)
-  );
+class UltrasonicSensor extends React.Component {
+  render() {
+    console.log('Rendering')
+    return (
+      React.createElement('div', null, `Distance (feet): `, this.props.distance)
+    )
+  };
 }
 
 class MainContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      latitude: 400,
-      longitude: 400,
-      Amperage: 400,
-      distance: 400,
+      gps: {
+        latitude: 400,
+        longitude: 400},
+      current: {amperage: 400},
+      distance: {distance: 400},
     };
     setInterval(this.changeState, 1000);
   }
@@ -44,29 +48,37 @@ class MainContainer extends React.Component {
     let amp = 1 - getRandomInt(3);
     let dis = 1 - getRandomInt(3);
     this.setState({
-      latitude: (this.state.latitude + lat),
-      longitude: (this.state.longitude + lon),
-      Amperage: (this.state.Amperage + amp),
-      distance: (this.state.distance + dis)
+      gps: {
+        latitude: (this.state.gps.latitude + lat),
+        longitude: (this.state.gps.longitude + lon)
+      },
+      current: {
+        amperage: (this.state.current.amperage + amp)
+      },
+      // distance: {
+      //   distance: (this.state.distance.distance + dis)
+      // }
     });
   }
 
   render() {
-    const latitude = this.state.latitude;
-    const longitude = this.state.longitude;
-    const amps = this.state.Amperage;
-    const dists = this.state.distance;
     return (
       React.createElement('div', null, [
-        React.createElement(GPS, { latitude, longitude }),
-        React.createElement(CurrentDraw, { amps }),
-        React.createElement(UltrasonicSensor, { distance: dists })
-      ])
+        React.createElement(UltrasonicContext.Provider, {value:this.state.distance},
+          createComponentFromContext(UltrasonicSensor, UltrasonicContext)
+        ),
+        React.createElement(GPSContext.Provider, {value:this.state.gps},
+          createComponentFromContext(GPS, GPSContext),
+        ),
+        React.createElement(CompassContext.Provider, {},
 
+        ),
+        React.createElement(CurrentContext.Provider, {value:this.state.current},
+          createComponentFromContext(CurrentDraw, CurrentContext),
+        )
+      ])
     );
   }
-
-
 }
 
 ReactDOM.render(
@@ -75,6 +87,16 @@ ReactDOM.render(
 );
 
 // ========================================
+
+function createComponentFromContext(component, context) {
+
+  return (
+      React.createElement(context.Consumer, null,
+        props => {
+          return React.createElement(component, props)}
+      )
+  );
+}
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
