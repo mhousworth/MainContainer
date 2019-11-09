@@ -1,5 +1,11 @@
 <!doctype html>
 <html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://unpkg.com/react@15/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
+  </head>
+<body>
 
 
 <div id="errors" style="
@@ -11,11 +17,9 @@
   white-space: pre-wrap;
 "></div>
 <div id="root"></div>
+</body>
 
-<script src="https://unpkg.com/react@15/dist/react.js"></script>
-<script src="https://unpkg.com/react-dom@15/dist/react-dom.js"></script>
 <script src="./index.js"></script>
-
 <script>
 window.addEventListener('mousedown', function(e) {
   document.body.classList.add('mouse-navigation');
