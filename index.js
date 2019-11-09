@@ -35,6 +35,12 @@ function UltrasonicSensor(props) {
   );
 }
 
+function AntennaSignal(props){
+  return (
+    React.createElement('div', null, `Antenna Signal (Decibels): `, props.decibels)
+  );
+}
+
 class MainContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -43,6 +49,7 @@ class MainContainer extends React.Component {
       longitude: 400,
       Amperage: 400,
       distance: 400,
+      decibels: 400,
       direction: 400,
     };
     setInterval(this.changeState, 1000);
@@ -53,12 +60,14 @@ class MainContainer extends React.Component {
     let lon = 1 - getRandomInt(3);
     let amp = 1 - getRandomInt(3);
     let dis = 1 - getRandomInt(3);
+    let dec = 1 - getRandomInt(3);//dec means decibels
     let dir = 1 - getRandomInt(3);
     this.setState({
       latitude: (this.state.latitude + lat),
       longitude: (this.state.longitude + lon),
       Amperage: (this.state.Amperage + amp),
       distance: (this.state.distance + dis),
+      decibels: (this.state.decibels + dec),
       direction: (this.state.direction + dir),
     });
   }
@@ -68,18 +77,19 @@ class MainContainer extends React.Component {
     const longitude = this.state.longitude;
     const amps = this.state.Amperage;
     const dists = this.state.distance;
+    const decibels = this.state.decibels;
     const direc = this.state.direction;
+    
     return (
       React.createElement('div', null, [
         React.createElement(GPS, { key:1, latitude, longitude }),
         React.createElement(CurrentDraw, { key:2, amps }),
         React.createElement(UltrasonicSensor, { key:3, distance: dists }),
-        React.createElement(Compass, { key:4, direc }),
+        React.createElement(AntennaSignal, {key:4, decibels}),
+        React.createElement(Compass, { key:5, direc })
       ])
-
     );
   }
-
 
 }
 
